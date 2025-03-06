@@ -1,2 +1,5 @@
 # SQLiteAgent
-Pure SQL Agent attempt
+
+## Agents built in pure* SQLite
+
+* HTTP excluded
