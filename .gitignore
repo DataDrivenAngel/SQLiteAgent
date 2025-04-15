@@ -3,3 +3,4 @@ secrets.txt
 app/.env
 app/.DS_Store
 .DS_Store
+.env

@@ -2,8 +2,9 @@ import sqlite3
 import replicate
 import sys
 import os
-from dotenv import load_dotenv
 
+replicate_api_token = os.getenv('REPLICATE_API_TOKEN')
+print(f"Loaded Replicate API token: {replicate_api_token}")
 
 
 def drop_db():
@@ -63,12 +64,13 @@ def chat_function(prompt):
                 "stop_sequences": "<|end_of_text|>,<|eot_id|>",
                 "prompt_template": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
                 "presence_penalty": 0,
-                "log_performance_metrics": False
+                "log_performance_metrics": False,
+                "API": replicate_api_token
             },
         ):
             chunk = str(event)
             response += chunk
-          #  print(chunk, end="", flush=True)  # Optional: print in real-time with flush
+            print(chunk, end="", flush=True)  # Optional: print in real-time with flush
         
         return response
     except Exception as e:
@@ -94,7 +96,7 @@ def add_task(goal):
     task_id = cursor.lastrowid
     cursor.execute('SELECT response FROM tasks WHERE goal = ?', (goal,))
     result = cursor.fetchone()
-    print('\n'+result[0]+'\n')
+    #print('\n'+result[0]+'\n')
     conn.close()
 
 
@@ -104,7 +106,7 @@ def main():
     # Check for -re flag
     if len(sys.argv) > 1 and sys.argv[1] == '-re':
         drop_db()
-    load_dotenv()
+        
 
 
     init_db()
@@ -138,6 +140,8 @@ def main():
             print("\n")
 
 if __name__ == "__main__":
+
+
 
     main()
 
