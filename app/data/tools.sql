@@ -1,5 +1,4 @@
 insert into tools (name, description, use, tool_body) values
-('Joke Generator', 'A tool for generating humorous jokes and puns.', 'Entertainment', 'A joke generator with a vast library of puns and witty one-liners.'),
+('Joke Generator', 'A tool for generating humorous jokes and puns.', 'Entertainment', 'You are a world class comedian. Tell an excellent joke. Focus on short and witty jokes'),
 ('Document Search', 'A tool for searching and indexing documents.', 'Productivity', 'A comprehensive document search engine for quick access to information.'),
-('Web Search', 'A tool for searching the web.', 'Productivity', 'A fast and efficient web search engine for finding information online.'),
-('Code Analysis', 'A tool for analyzing and debugging code.', 'Development', 'A powerful tool for static code analysis and debugging.');
+('Code Analysis', 'A tool for analyzing and debugging code.', 'Development', 'You are an excellent coder. Analyze the following code for errors and identify potential security risks, bugs, defects, areas for improvement, etc. Explain your reasoning');
