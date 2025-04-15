@@ -6,5 +6,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     goal TEXT NOT NULL,
     results TEXT,
     response TEXT,
-    is_active boolean NOT NULL
+    is_active boolean NOT NULL,
+    iteration_limit INT,
+    iterations INT
     );

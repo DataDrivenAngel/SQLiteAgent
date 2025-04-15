@@ -1,8 +1,13 @@
-
 import sqlite3
 import replicate
 import sys
 import os
+
+def drop_db():
+
+    if os.path.exists('agent_tasks.db'):
+        os.remove('agent_tasks.db')
+        print("Database dropped successfully.")
 
 # Initialize the database
 def init_db():
@@ -13,7 +18,17 @@ def init_db():
     if cursor.fetchone() is None:
         with open(os.path.join('sql', 'setup_table_tasks.sql'), 'r') as file:
             cursor.executescript(file.read())
-    conn.commit()
+        conn.commit()
+
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='tools';")
+    if cursor.fetchone() is None:
+        with open(os.path.join('sql', 'setup_table_tools.sql'), 'r') as file:
+            cursor.executescript(file.read())
+        conn.commit()
+
+        with open(os.path.join('data', 'tools.sql'), 'r') as file:
+            cursor.executescript(file.read())
+        conn.commit()
     conn.close()
 
 
@@ -27,6 +42,21 @@ def register_chat():
     
     return conn
 
+
+system_prompt = f""" You are a helpful agent embodied in a sql database. """
+
+# Please evaluate the following prompt carefully and respond to the best of your abilities. You are able to use the following tools:
+
+#             cursor = conn.cursor()
+#             cursor.execute("SELECT name, description FROM tools")
+#             tools = cursor.fetchall()
+#             for tool in tools:
+#                 print(f"Name: {tool[0]}")
+#                 print(f"Description: {tool[1]}")
+# """
+
+
+
 def chat_function(prompt):
     """Custom function to use replicate for text generation"""
     try:
@@ -39,7 +69,7 @@ def chat_function(prompt):
                 "prompt": prompt,
                 "max_tokens": 512,
                 "temperature": 0.7,
-                "system_prompt": "You are a helpful agent embodied in a sql database",
+                "system_prompt": system_prompt,
                 "length_penalty": 1,
                 "max_new_tokens": 512,
                 "stop_sequences": "<|end_of_text|>,<|eot_id|>",
@@ -70,19 +100,23 @@ def init_triggers():
 def add_task(goal):
     conn = register_chat()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO tasks (goal, is_active) VALUES (?, ?)', (goal, 1))
+    cursor.execute('INSERT INTO tasks (goal, is_active, iteration_limit, iterations) VALUES (?, ?, ?, ?)', (goal, 1, 10 , 0))
     conn.commit()
     # Get the response for the task we just added
     task_id = cursor.lastrowid
     cursor.execute('SELECT response FROM tasks WHERE goal = ?', (goal,))
     result = cursor.fetchone()
-    print('\n'+result[0]+'\n')
+    return('\n'+result[0]+'\n')
     conn.close()
 
 
 
     
 def main():
+    # Check for -re flag
+    if len(sys.argv) > 1 and sys.argv[1] == '-re':
+        drop_db()
+    
     init_db()
     register_chat()
     init_triggers()
@@ -91,13 +125,27 @@ def main():
     while True:
         command = input("Enter prompt: ").strip().lower()
 
+
         if command == 'exit':
             print("Exiting the application.")
             sys.exit()
-      
+
+        elif command == 'list':
+            print("List of tools / protocols:")
+            conn = register_chat()
+            cursor = conn.cursor()
+            cursor.execute("SELECT name, description FROM tools")
+            tools = cursor.fetchall()
+            for tool in tools:
+                print(f"Name: {tool[0]}")
+                print(f"Description: {tool[1]}")
+                print()
+            conn.close()
+
+
         else:
-            add_task(command)
-            print("Response:\n")
+            Response = add_task(command)
+            print(f"Response:\n {Response}")
 
 if __name__ == "__main__":
 
