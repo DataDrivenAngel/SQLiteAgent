@@ -1,2 +1,5 @@
 secrets.txt
 *.db
+app/.env
+app/.DS_Store
+.DS_Store

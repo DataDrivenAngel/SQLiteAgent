@@ -42,23 +42,8 @@ def register_chat():
     
     return conn
 
-
-
-
-# Please evaluate the following prompt carefully and respond to the best of your abilities. You are able to use the following tools:
-
-#             cursor = conn.cursor()
-#             cursor.execute("SELECT name, description FROM tools")
-#             tools = cursor.fetchall()
-#             for tool in tools:
-#                 print(f"Name: {tool[0]}")
-#                 print(f"Description: {tool[1]}")
-# """
-
-
-
 def chat_function(prompt):
-
+    """Custom function to use replicate for text generation"""
     try:
         response = ""
         for event in replicate.stream(
@@ -69,7 +54,7 @@ def chat_function(prompt):
                 "prompt": prompt,
                 "max_tokens": 512,
                 "temperature": 0.7,
-                "system_prompt": " You are a helpful agent embodied in a sql database. ",
+                "system_prompt": """You are a helpful agent embodied in a sql database. Please evaluate the following prompt""",
                 "length_penalty": 1,
                 "max_new_tokens": 512,
                 "stop_sequences": "<|end_of_text|>,<|eot_id|>",
@@ -106,9 +91,8 @@ def add_task(goal):
     task_id = cursor.lastrowid
     cursor.execute('SELECT response FROM tasks WHERE goal = ?', (goal,))
     result = cursor.fetchone()
+    print('\n'+result[0]+'\n')
     conn.close()
-    return('\n'+result[0]+'\n')
-    
 
 
 
@@ -145,8 +129,8 @@ def main():
 
 
         else:
-            Response = add_task(command)
-            print(f"Response:\n {Response}")
+            add_task(command)
+            print("\n")
 
 if __name__ == "__main__":
 
