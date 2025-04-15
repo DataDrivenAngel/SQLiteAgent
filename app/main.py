@@ -68,21 +68,18 @@ def get_tools():
 def chat_function(prompt):
     """Custom function to use replicate for text generation"""
 
-
-
-
     sys_prompt = f"""
 
-        You are a helpful agent embodied in a sql database. 
+         You are a helpful agent embodied in a sql database. 
 
-        Evaluate the following prompt
-        
-        Pick a single tool from the list of tools to best handle the prompt:
-        {get_tools()}
-
-        Respond only with a single tool name
-        
         """
+    
+        # Pick a single tool from the list of tools to best handle the prompt:
+        # {get_tools()}
+
+        # Respond only with a single tool name
+        
+        # """
     
 
 
