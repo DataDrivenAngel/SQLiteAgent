@@ -121,7 +121,7 @@ def main():
 
     
     while True:
-        command = input("Enter prompt: ").strip().lower()
+        command = input(">>> Enter prompt: ").strip().lower()
 
 
         if command == 'exit':
@@ -137,7 +137,7 @@ def main():
             for tool in tools:
                 print(f"Name: {tool[0]}")
                 print(f"Description: {tool[1]}")
-                print()
+
             conn.close()
 
 
