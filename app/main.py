@@ -4,8 +4,6 @@ import sys
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
 
 
 def drop_db():
@@ -106,7 +104,9 @@ def main():
     # Check for -re flag
     if len(sys.argv) > 1 and sys.argv[1] == '-re':
         drop_db()
-    
+    load_dotenv()
+
+
     init_db()
     register_chat()
     init_triggers()
