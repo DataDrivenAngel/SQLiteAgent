@@ -59,7 +59,7 @@ def chat_function(prompt):
         
 
 def init_triggers():
-    conn = sqlite3.connect('agent_tasks.db')
+    conn = register_chat()
     cursor = conn.cursor()
     with open(os.path.join('sql', 'setup_triggers.sql'), 'r') as file:
         cursor.executescript(file.read())
@@ -68,28 +68,36 @@ def init_triggers():
 
 # Add a new task
 def add_task(goal):
-    conn = sqlite3.connect('agent_tasks.db')
+    conn = register_chat()
     cursor = conn.cursor()
     cursor.execute('INSERT INTO tasks (goal, is_active) VALUES (?, ?)', (goal, 1))
     conn.commit()
+    # Get the response for the task we just added
+    task_id = cursor.lastrowid
+    cursor.execute('SELECT response FROM tasks WHERE goal = ?', (goal,))
+    result = cursor.fetchone()
+    print('\n'+result[0]+'\n')
     conn.close()
+
+
 
     
 def main():
     init_db()
     register_chat()
     init_triggers()
+
+    
     while True:
-        command = input("Enter task (add/list/exit): ").strip().lower()
-        if command == 'add':
-            goal = input("Enter task goal: ")
-            add_task(goal)
-            print("Task added.")
-        elif command == 'exit':
+        command = input("Enter prompt: ").strip().lower()
+
+        if command == 'exit':
             print("Exiting the application.")
             sys.exit()
+      
         else:
-            print("Unknown command. Please try again.")
+            add_task(command)
+            print("Response:\n")
 
 if __name__ == "__main__":
 

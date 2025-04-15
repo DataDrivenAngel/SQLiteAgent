@@ -6,6 +6,6 @@ AFTER INSERT ON tasks
 WHEN NEW.is_active = 1
 BEGIN
   UPDATE tasks
-  SET is_active = 0, results = 'task completed'
+  SET is_active = 0, results = 'task completed', response = chat(goal)
   WHERE id = NEW.id;
 END;

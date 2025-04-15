@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS tasks (
     context TEXT,
     goal TEXT NOT NULL,
     results TEXT,
+    response TEXT,
     is_active boolean NOT NULL
     );
