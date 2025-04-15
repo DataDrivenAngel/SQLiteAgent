@@ -4,7 +4,6 @@ import sys
 import os
 
 replicate_api_token = os.getenv('REPLICATE_API_TOKEN')
-print(f"Loaded Replicate API token: {replicate_api_token}")
 
 
 def drop_db():
@@ -46,6 +45,13 @@ def register_chat():
     
     return conn
 
+
+sys_prompt = f"""
+
+You are a helpful agent embodied in a sql database. 
+
+Evaluate the following prompt"""
+
 def chat_function(prompt):
     """Custom function to use replicate for text generation"""
     try:
@@ -54,11 +60,11 @@ def chat_function(prompt):
             "meta/meta-llama-3-8b-instruct",
             input={
                 "top_k": 0,
-                "top_p": 0.95,
+                "top_p": 0.95,  
                 "prompt": prompt,
                 "max_tokens": 512,
                 "temperature": 0.7,
-                "system_prompt": """You are a helpful agent embodied in a sql database. Please evaluate the following prompt""",
+                "system_prompt": sys_prompt,
                 "length_penalty": 1,
                 "max_new_tokens": 512,
                 "stop_sequences": "<|end_of_text|>,<|eot_id|>",
