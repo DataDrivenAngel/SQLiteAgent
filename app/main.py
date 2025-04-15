@@ -2,6 +2,11 @@ import sqlite3
 import replicate
 import sys
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 
 def drop_db():
 
