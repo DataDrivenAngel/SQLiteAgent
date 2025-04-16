@@ -73,13 +73,7 @@ def chat_function(prompt):
          You are a helpful agent embodied in a sql database. 
 
         """
-    
-        # Pick a single tool from the list of tools to best handle the prompt:
-        # {get_tools()}
 
-        # Respond only with a single tool name
-        
-        # """
     
 
 
@@ -111,53 +105,6 @@ def chat_function(prompt):
     except Exception as e:
         return f"Error: {str(e)}"
     
-def chat_function(prompt):
-    """Custom function to use replicate for text generation"""
-
-
-
-
-    sys_prompt = f"""
-
-        You are a helpful agent embodied in a sql database. 
-
-        Evaluate the following prompt
-        
-        Pick a single tool from the list of tools to best handle the prompt:
-        {get_tools()}
-
-        Respond only with a single tool name"""
-    
-
-
-    try:
-        response = ""
-        for event in replicate.stream(
-            "meta/meta-llama-3-8b-instruct",
-            input={
-                "top_k": 0,
-                "top_p": 0.95,  
-                "prompt": prompt,
-                "max_tokens": 512,
-                "temperature": 0.7,
-                "system_prompt": sys_prompt,
-                "length_penalty": 1,
-                "max_new_tokens": 512,
-                "stop_sequences": "<|end_of_text|>,<|eot_id|>",
-                "prompt_template": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-                "presence_penalty": 0,
-                "log_performance_metrics": False,
-                "API": replicate_api_token
-            },
-        ):
-            chunk = str(event)
-            response += chunk
-            print(chunk, end="", flush=True)  # Optional: print in real-time with flush
-        
-        return response
-    except Exception as e:
-        return f"Error: {str(e)}"
-
 
 
 def init_triggers():
