@@ -74,7 +74,12 @@ def chat_function(prompt):
 
         """
 
-    
+        #  Pick a single tool from the list of tools to best handle the prompt:
+        # {get_tools()}
+
+        # Respond only with a single tool name
+        
+        # """
 
 
     try:
